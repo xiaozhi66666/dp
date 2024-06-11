@@ -199,6 +199,9 @@
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
   background-color: #cfdde2;
 }
+.el-select-dropdown__item{
+  padding-left: 20px;
+}
 </style>
   
 <script>
