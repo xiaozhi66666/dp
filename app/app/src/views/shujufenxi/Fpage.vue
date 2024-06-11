@@ -26,7 +26,7 @@
 
 <style scoped>
 * {
-  height: 100vb;
+  /* height: 100vb; */
   width: 100vb;
   margin: 0%;
   padding: 0%;
