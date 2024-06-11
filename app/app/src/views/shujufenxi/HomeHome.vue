@@ -45,9 +45,9 @@
         <div class="p22" ref="chart4"></div>
       </div>
       <div class="p3">
-        <el-select
+        <!-- <el-select
           v-model="sortSelect3"
-          placeholder="请选择"
+          placeholder="请选择1"
           @change="updateChart3"
           class="choose3"
         >
@@ -58,7 +58,7 @@
             :value="item.value"
           >
           </el-option>
-        </el-select>
+        </el-select> -->
       </div>
       <div class="p4">
         <div class="p41" ref="chart5"></div>
@@ -204,13 +204,15 @@
 <script>
 import * as echarts from "echarts";
 import axios from "axios";
-import ROOT_PATH from '@/assets/map.json'
+import ROOT_PATH from "@/assets/map.json";
+import {HomeHome2022, HomeHome2021,HomeHome2020 }  from '@/assets/city'
 export default {
   name: "MapChart",
   data() {
     return {
       sortSelect1: "population", // 第一个选项
-      sortSelect2: "2011", // 第er个选项
+      sortSelect2: "2022", // 第er个选项
+      list:[],
       coption1: [
         {
           value: "population",
@@ -230,21 +232,46 @@ export default {
         },
       ],
       coption2: [
+        // {
+        //   value: "2011",
+        //   label: "2011",
+        // },
+        // {
+        //   value: "2012",
+        //   label: "2012",
+        // },
+        // {
+        //   value: "2013",
+        //   label: "2013",
+        // },
+        // {
+        //   value: "2014",
+        //   label: "2014",
+        // }, {
+        //   value: "2015",
+        //   label: "2015",
+        // }, {
+        //   value: "2016",
+        //   label: "2016",
+        // }, {
+        //   value: "2017",
+        //   label: "2017",
+        // }, {
+        //   value: "2018",
+        //   label: "2018",
+        // }, {
+        //   value: "2019",
+        //   label: "2019",
+        // },
         {
-          value: "2011",
-          label: "2011",
-        },
-        {
-          value: "2012",
-          label: "2012",
-        },
-        {
-          value: "2013",
-          label: "2013",
-        },
-        {
-          value: "2014",
-          label: "2014",
+          value: "2020",
+          label: "2020",
+        }, {
+          value: "2021",
+          label: "2021",
+        }, {
+          value: "2022",
+          label: "2022",
         },
       ],
       chart1: null, // 用于存储ECharts实例
@@ -277,6 +304,7 @@ export default {
               ["甘孜", 110.3, 8.43, 3.17, 5.26],
               ["凉山", 489.1, 17.17, 7.56, 9.61],
             ],
+            // source:[]
           },
           {
             transform: {
@@ -446,15 +474,80 @@ export default {
   },
 
   mounted() {
+    // this.option2.dataset.source = HomeHome2022
+    // console.log('=', this.list);
     this.initChartmap();
-    this.chart2 = echarts.init(this.$refs.chart2);
-    this.chart2.setOption(this.option2);
-    this.initChartBing();
-    this.chart5 = echarts.init(this.$refs.chart5);
-    this.loadCSVData("各市州年龄构成.csv"); // 假设CSV文件在public文件夹下
+      this.chart2 = echarts.init(this.$refs.chart2);
+      this.chart2.setOption(this.option2);
+      this.initChartBing();
+      this.chart5 = echarts.init(this.$refs.chart5);
+      this.loadCSVData("各市州年龄构成.csv"); // 假设CSV文件在public文件夹下
+    setTimeout(() => {
+   },2000)
   },
 
   methods: {
+    updateChart2(v) {
+      //     this.option2.dataset[1].transform.config.dimension = this.sortSelect1; // 替换为实际的属性名
+      // // 使用新的配置项更新图表
+      // this.chart2.setOption(this.option2);
+      console.log(v);
+      switch (v) {
+        case '2011':
+          // console.log("-2011",HomeHome2021);
+        
+          break;
+        case '2012':
+          console.log("-2012");
+          break;
+        case '2013':
+          console.log("-2013");
+          break;
+        case '2014':
+          console.log("-2014");
+          break;
+        case '2015':
+          console.log("-2015");
+          break;
+        case '2016':
+          
+          console.log("-2016");
+          break;
+        case '2017':
+          console.log("-2017");
+          break;
+        case '2018':
+          console.log("-2018");
+          break;
+        case '2019':
+          console.log("-2019");
+          break;
+        case '2020':
+          console.log("-2020");
+           this.option2.dataset[0].source = HomeHome2020
+          console.log('--', this.chart2)
+          setTimeout(() => {
+            this.chart2.setOption(this.option2, true);
+          }, 300)
+          break;
+        case '2021':
+          console.log("-2021");
+             this.option2.dataset[0].source = HomeHome2021
+          console.log('--', this.chart2)
+          setTimeout(() => {
+            this.chart2.setOption(this.option2, true);
+          }, 300)
+          break;
+        default:
+             this.option2.dataset[0].source = HomeHome2022
+          console.log('--', this.chart2)
+          setTimeout(() => {
+            this.chart2.setOption(this.option2, true);
+          }, 300)
+          console.log("-2022");
+          break;
+      }
+    },
     loadCSVData(url) {
       axios
         .get(url, { responseType: "text" })
@@ -604,7 +697,7 @@ export default {
       // 加载地图数据
       // const ROOT_PATH =
       //   "https://geo.datav.aliyun.com/areas_v3/bound/510000_full.json";
-      console.log('ROOT_PATH', ROOT_PATH)
+      console.log("ROOT_PATH", ROOT_PATH);
       try {
         // const response = await axios.get(ROOT_PATH);
         const geoJson = ROOT_PATH;
