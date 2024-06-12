@@ -209,10 +209,13 @@ import * as echarts from "echarts";
 import axios from "axios";
 import ROOT_PATH from "@/assets/map.json";
 import {HomeHome2022, HomeHome2021,HomeHome2020 }  from '@/assets/city'
+import { HOTDATA } from '@/assets/hot'
+import CITYP from '@/assets/rate'
 export default {
   name: "MapChart",
   data() {
     return {
+      list: [],
       sortSelect1: "population", // 第一个选项
       sortSelect2: "2022", // 第er个选项
       list:[],
@@ -280,6 +283,33 @@ export default {
       chart1: null, // 用于存储ECharts实例
       option1: null, // 用于存储图表配置
       chart2: null,
+      pieSeries1:{
+          type: "",
+          name: '',
+          radius: "13%",
+          center: [
+            
+          ], // 调整位置
+          label: {
+            show: false,
+          },
+          itemStyle: {
+            emphasis: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: "rgba(0, 0, 0, 0.5)",
+            },
+          },
+          tooltip: {
+            formatter: "{b}: {c} ({d}%)",
+          },
+          data: [
+            // { value: this.dataBing[index][2], name: "农村" },
+            // { value: this.dataBing[index][3], name: "城镇" },
+            //  { value: this.citL[index], name: "农村" },
+            // { value: this.ruralRates[index], name: "城镇" },
+          ],
+        },
       option2: {
         dataset: [
           {
@@ -449,36 +479,58 @@ export default {
         [3, 7, 5, 5],
         [5, 8, 6, 4],
       ],
-      cities: [
-        // ... 你的城市列表
-        "成都",
-        "绵阳",
-        "德阳",
-        "攀枝花",
-        "广元",
-        "遂宁",
-        "阿坝藏族羌族自治州",
-        "内江",
-        "乐山",
-        "南充",
-        "宜宾",
-        "自贡",
-        "泸州",
-        "甘孜藏族自治州",
-        "广安",
-        "达州",
-        "眉山",
-        "雅安",
-        "巴中",
-        "资阳",
-        "凉山彝族自治州",
-      ],
+//       cities: [
+//         // ... 你的城市列表
+//         // { name: '成都市', value: '79.89' },
+//         // { name: '自贡市', value: '56.67'},
+//         // { name: '攀枝花市', value: '70.23' },
+//         // { name: '泸州市', value: '51.91' },
+//         // { name: '德阳市', value: '57.61' },
+//         // { name: '绵阳市', value: '54.29' },
+//         // { name: '广元市', value: '48.55' },
+//         // { name: '遂宁市', value: '58.68' },
+//         // { name: '内江市', value: '51.56' },
+//         // { name: '乐山市', value: '54.57' },
+//         // { name: '南充市', value: '51.75' },
+//         // { name: '眉山市', value: '51.61' },
+//         // { name: '宜宾市', value: '53.55' },
+//         // { name: '广安市', value: '45.32' },
+//         // { name: '达州市', value: '51.30' },
+//         // { name: '雅安市', value: '54.02' },
+//         // { name: '巴中市', value: '47.34' },
+//         // { name: '资阳市', value: '42.66' },
+//         // { name: '阿坝藏族羌族自治州', value: '42.55' },
+//         // { name: '甘孜藏族自治州', value: '31.92' },
+//         // { name: '凉山彝族自治州', value: '79.89' },
+// "成都市",
+// "自贡",
+//         "绵阳",
+//         "德阳",
+//         "攀枝花",
+//         "广元",
+//         "遂宁",
+//         "阿坝藏族羌族自治州",
+//         "内江",
+//         "乐山",
+//         "南充",
+//         "宜宾",
+//         "泸州",
+//         "甘孜藏族自治州",
+//         "广安",
+//         "达州",
+//         "眉山",
+//         "雅安",
+//         "巴中",
+//         "资阳",
+//         "凉山彝族自治州",
+//       ],
     };
   },
 
   mounted() {
     // this.option2.dataset.source = HomeHome2022
     // console.log('=', this.list);
+    this.list = CITYP.R2022
     this.initChartmap();
       this.chart2 = echarts.init(this.$refs.chart2);
       this.chart2.setOption(this.option2);
@@ -486,7 +538,20 @@ export default {
       this.chart5 = echarts.init(this.$refs.chart5);
       this.loadCSVData("各市州年龄构成.csv"); // 假设CSV文件在public文件夹下
     setTimeout(() => {
+      // this.list = CITYP.R2022
+      console.log('----', this.citL)
    },2000)
+  },
+  computed: {
+    citL(){
+      return this.list.map(i => i.value)
+    },
+    ruralRates() {
+      return this.list.map(city => ((100 - parseFloat(city.value)).toFixed(2)));
+    },
+    cities() {
+       return this.list.map(i => i.name)
+    }
   },
 
   methods: {
@@ -495,57 +560,66 @@ export default {
       // // 使用新的配置项更新图表
       // this.chart2.setOption(this.option2);
       console.log(v);
+      
+      let cz = []
+      let nc = []
       switch (v) {
-        case '2011':
-          // console.log("-2011",HomeHome2021);
-        
-          break;
-        case '2012':
-          console.log("-2012");
-          break;
-        case '2013':
-          console.log("-2013");
-          break;
-        case '2014':
-          console.log("-2014");
-          break;
-        case '2015':
-          console.log("-2015");
-          break;
-        case '2016':
-          
-          console.log("-2016");
-          break;
-        case '2017':
-          console.log("-2017");
-          break;
-        case '2018':
-          console.log("-2018");
-          break;
-        case '2019':
-          console.log("-2019");
-          break;
+       
         case '2020':
-          console.log("-2020");
            this.option2.dataset[0].source = HomeHome2020
-          console.log('--', this.chart2)
+              this.option1.series[0].data = HOTDATA.HOT2020
+              this.list =  CITYP.R2020
+          cz = this.list.map(i => i.value)
+          nc =  this.list.map(city => ((100 - parseFloat(city.value)).toFixed(2)));
+          setTimeout(() => {
+            this.option4.series.forEach((i,index) => {
+              i.data = [
+              {value: nc[index], name: "农村"},{ value: cz[index], name: "城镇", }
+            ]
+          })
+        },300)
+         
           setTimeout(() => {
             this.chart2.setOption(this.option2, true);
+            this.chart1.setOption(this.option1, true);
+             this.chart4.setOption(this.option4,true);
           }, 300)
           break;
         case '2021':
           console.log("-2021");
              this.option2.dataset[0].source = HomeHome2021
-          console.log('--', this.chart2)
+             this.option1.series[0].data = HOTDATA.HOT2021
+               this.list =  CITYP.R2021
+          cz = this.list.map(i => i.value)
+          nc =  this.list.map(city => ((100 - parseFloat(city.value)).toFixed(2)));
+          setTimeout(() => {
+            this.option4.series.forEach((i,index) => {
+              i.data = [
+              {value: nc[index], name: "农村"},{ value: cz[index], name: "城镇", }
+            ]
+          })
+        },300)
           setTimeout(() => {
             this.chart2.setOption(this.option2, true);
+            this.chart1.setOption(this.option1, true);
+              this.chart4.setOption(this.option4,true);
           }, 300)
           break;
         default:
-             this.option2.dataset[0].source = HomeHome2022
-          console.log('--', this.chart2)
+          this.option2.dataset[0].source = HomeHome2022
+             this.option1.series[0].data = HOTDATA.HOT2022
+               this.list =  CITYP.R2022
+          cz = this.list.map(i => i.value)
+          nc =  this.list.map(city => ((100 - parseFloat(city.value)).toFixed(2)));
+            this.option4.series.forEach((i,index) => {
+              i.data = [
+              {value: nc[index], name: "农村"},{ value: cz[index], name: "城镇", }
+            ]
+          })
           setTimeout(() => {
             this.chart2.setOption(this.option2, true);
+            this.chart1.setOption(this.option1, true);
+             this.chart4.setOption(this.option4,true);
           }, 300)
           console.log("-2022");
           break;
@@ -736,29 +810,30 @@ export default {
               label: {
                 show: true,
               },
-              data: [
-                { name: "成都市", value: 1484 },
-                { name: "自贡市", value: 560 },
-                { name: "攀枝花市", value: 164 },
-                { name: "泸州市", value: 348 },
-                { name: "德阳市", value: 586 },
-                { name: "绵阳市", value: 242 },
-                { name: "广元市", value: 139 },
-                { name: "遂宁市", value: 521 },
-                { name: "内江市", value: 573 },
-                { name: "乐山市", value: 248 },
-                { name: "南充市", value: 445 },
-                { name: "眉山市", value: 415 },
-                { name: "宜宾市", value: 348 },
-                { name: "广安市", value: 511 },
-                { name: "达州市", value: 323 },
-                { name: "雅安市", value: 95 },
-                { name: "巴中市", value: 216 },
-                { name: "资阳市", value: 395 },
-                { name: "阿坝藏族羌族自治州", value: 10 },
-                { name: "甘孜藏族自治州", value: 7 },
-                { name: "凉山彝族自治州", value: 81 },
-              ],
+              // data: [
+              //   { name: "成都市", value: 1484 },
+              //   { name: "自贡市", value: 560 },
+              //   { name: "攀枝花市", value: 164 },
+              //   { name: "泸州市", value: 348 },
+              //   { name: "德阳市", value: 586 },
+              //   { name: "绵阳市", value: 242 },
+              //   { name: "广元市", value: 139 },
+              //   { name: "遂宁市", value: 521 },
+              //   { name: "内江市", value: 573 },
+              //   { name: "乐山市", value: 248 },
+              //   { name: "南充市", value: 445 },
+              //   { name: "眉山市", value: 415 },
+              //   { name: "宜宾市", value: 348 },
+              //   { name: "广安市", value: 511 },
+              //   { name: "达州市", value: 323 },
+              //   { name: "雅安市", value: 95 },
+              //   { name: "巴中市", value: 216 },
+              //   { name: "资阳市", value: 395 },
+              //   { name: "阿坝藏族羌族自治州", value: 10 },
+              //   { name: "甘孜藏族自治州", value: 7 },
+              //   { name: "凉山彝族自治州", value: 81 },
+              // ],
+              data:HOTDATA.HOT2022,
               nameMap: {
                 Chengdu: "成都市",
                 Zigong: "自贡市",
@@ -841,7 +916,7 @@ export default {
         };
       });
 
-      const pieSeries1 = this.cities.map((city, index) => {
+      this.pieSeries1 = this.cities.map((city, index) => {
         return {
           type: "pie",
           name: city + " - 城镇/农村",
@@ -864,8 +939,8 @@ export default {
             formatter: "{b}: {c} ({d}%)",
           },
           data: [
-            { value: this.dataBing[index][2], name: "农村" },
-            { value: this.dataBing[index][3], name: "城镇" },
+             { value: this.ruralRates[index], name: "农村" },
+            { value: this.citL[index], name: "城镇" },
           ],
         };
       });
@@ -895,8 +970,9 @@ export default {
         })),
         series: pieSeries,
       };
-
-      const option4 = {
+      // ----------------------------------
+      
+      this.option4 = {
         tooltip: {
           trigger: "item",
         },
@@ -920,9 +996,9 @@ export default {
             font: "bold 12px Microsoft YaHei",
           },
         })),
-        series: pieSeries1,
+        series: this.pieSeries1,
       };
-      this.chart4.setOption(option4);
+      this.chart4.setOption(this.option4);
       this.chart3.setOption(option3);
     },
   },
